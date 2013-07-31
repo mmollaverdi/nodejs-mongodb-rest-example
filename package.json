@@ -1,0 +1,15 @@
+{
+  "name": "sample-node-mongodb-rest-api",
+  "version": "0.0.1",
+  "description": "Sample REST API implemented in node.js and MongoDB",
+  "author": {
+    "name": "Mehdi Mollaverdi",
+    "email": "m.mollaverdi@gmail.com"
+  },
+  "dependencies": {
+    "mongodb": "",
+    "restify": ""
+  },
+  "main" : "./index",
+  "engine": "node >= 0.8"
+}
