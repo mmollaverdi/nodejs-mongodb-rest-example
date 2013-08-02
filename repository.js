@@ -1,54 +1,58 @@
 var dbAccess = require('./dbAccess');
 var collectionName = 'people';
 
-exports.add = function(document, successCallback) {
-  dbAccess.connect(function(db) {
-  
-    db.collection(collectionName).insert(document, function(err, docs) {
-      if(err) {
-        throw err;
-      }
-      successCallback();
-    });  
+exports.add = function(document, callback) {
+  dbAccess.connect(function(err, db) {
+
+    if (err) {
+	  callback(err);
+	} else {
+      db.collection(collectionName).insert(document, function(err, document) {
+        callback(err);
+      });  
+	}
 
   });
 };
 
-exports.findByName = function(name, successCallback) {
-  dbAccess.connect(function(db) {
-
-    db.collection(collectionName).findOne({'name' : name}, function(err, document) {
-      if(err) {
-        throw err;
-      }
-      successCallback(document);
-    });  
-
-  });
-};
-
-exports.delete = function(name, successCallback) {
-  dbAccess.connect(function(db) {
-
-    db.collection(collectionName).remove({'name' : name}, function(err, document) {
-      if(err) {
-        throw err;
-      }
-      successCallback();
-    });  
+exports.findByName = function(name, callback) {
+  dbAccess.connect(function(err, db) {
+	
+	if (err) {
+	  callback(err);
+	} else {
+	  db.collection(collectionName).findOne({'name' : name}, function(err, document) {
+        callback(err, document);
+      });
+	}
 
   });
 };
 
-exports.update = function(name, document, successCallback) {
-  dbAccess.connect(function(db) {
+exports.delete = function(name, callback) {
+  dbAccess.connect(function(err, db) {
+    
+	if (err) {
+	  callback(err);
+    } else {
+	  db.collection(collectionName).remove({'name' : name}, function(err) {
+        callback(err);
+      });  
+    }
 
-    db.collection(collectionName).update({'name' : name}, document, function(err, document) {
-      if(err) {
-        throw err;
-      }
-      successCallback();
-    });  
+  });
+};
+
+exports.update = function(name, document, callback) {
+  dbAccess.connect(function(err, db) {
+
+    if (err) {
+	  callback(err);
+    } else {
+	  db.collection(collectionName).update({'name' : name}, document, function(err, document) {
+        callback(err);
+      });  
+	}
 
   });
 };

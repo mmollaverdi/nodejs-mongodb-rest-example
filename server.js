@@ -4,10 +4,11 @@ var repository = require('./repository');
 exports.start = function() {
   var server = restify.createServer();
   server.use(restify.bodyParser());
-  
+
   server.get('/people/:name', function(req, res, next) {
-  
-    repository.findByName(req.params.name, function(document) {
+
+    repository.findByName(req.params.name, function(err, document) {
+	  handle(err, next);
       if (document) {
         res.setHeader('content-type', 'application/json');
         res.send(document);
@@ -19,37 +20,43 @@ exports.start = function() {
     });
     
   });
-  
+
   server.post('/people', function create(req, res, next) {
-      
-    repository.add(req.body, function() {
+
+    repository.add(req.body, function(err) {
+	  handle(err, next);
       res.send(201);
       return next();
     });
       
   });
-  
+
   server.del('/people/:name', function create(req, res, next) {
-        
-    repository.delete(req.params.name, function() {
+
+    repository.delete(req.params.name, function(err) {
+	  handle(err, next);
       res.send(204);
       return next();
     });
         
   });
-  
+
   server.put('/people/:name', function create(req, res, next) {
-          
-    repository.update(req.params.name, req.body, function() {
+
+    repository.update(req.params.name, req.body, function(err) {
+	  handle(err, next);
       res.send(204);
       return next();
     });
-          
+
   });
-  
+
   server.listen(8080);
 };
 
-//repository.add({name: 'Joe', hobbies: ['Cycling', 'Chess']}, function(){});
-
-
+function handle(err, next) {
+  if (err) {
+    console.error(err);
+    return next(new restify.InternalError("Internal server error"));
+  }
+};
